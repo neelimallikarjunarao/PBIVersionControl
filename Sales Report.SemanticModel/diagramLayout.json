@@ -1,0 +1,61 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 302,
+            "y": 366
+          },
+          "nodeIndex": "financials",
+          "nodeLineageTag": "d3eb404d-a230-4f65-b3b4-2e0446cc3b8d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 16,
+            "y": 33
+          },
+          "nodeIndex": "Measure Table",
+          "nodeLineageTag": "1df3acd4-9f2d-4790-bbfe-729c8efd0ac0",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 485,
+            "y": 15
+          },
+          "nodeIndex": "DateTable",
+          "nodeLineageTag": "6abcd568-8251-4efc-924e-6d7f3c43d3a2",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

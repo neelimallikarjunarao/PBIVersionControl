@@ -1,0 +1,54 @@
+/// Date table based on the financials data range
+table DateTable
+	lineageTag: 6abcd568-8251-4efc-924e-6d7f3c43d3a2
+	dataCategory: Time
+
+	column Date
+		isUnique
+		lineageTag: 4d982a94-054c-4fad-9803-3267ee20f927
+		isNameInferred
+		sourceColumn: [Date]
+
+	column DateKey
+		lineageTag: a4d41a2f-4e65-4909-ad95-1b47c2545149
+		isNameInferred
+		sourceColumn: [DateKey]
+
+	column Year
+		lineageTag: 0a9ee381-16bf-4dd3-8fd4-440580683959
+		isNameInferred
+		sourceColumn: [Year]
+
+	column MonthNumber
+		lineageTag: 845b1716-e16b-43b8-8300-b1b3c7ef6faf
+		isNameInferred
+		sourceColumn: [MonthNumber]
+
+	column MonthName
+		lineageTag: e682e565-0eb5-4db3-895d-2617dd83c89a
+		isNameInferred
+		sourceColumn: [MonthName]
+
+	column Quarter
+		lineageTag: a84aa4da-89aa-4459-8af0-b03663c1c0b8
+		isNameInferred
+		sourceColumn: [Quarter]
+
+	column YearMonth
+		lineageTag: 3cc7c27f-1bb6-4acb-8208-925406136ea5
+		isNameInferred
+		sourceColumn: [YearMonth]
+
+	partition DateTable = calculated
+		mode: import
+		source =
+				ADDCOLUMNS(
+				    CALENDAR(MIN('financials'[Date]), MAX('financials'[Date])),
+				    "DateKey", FORMAT([Date], "YYYYMMDD"),
+				    "Year", YEAR([Date]),
+				    "MonthNumber", MONTH([Date]),
+				    "MonthName", FORMAT([Date], "MMMM"),
+				    "Quarter", "Q" & FORMAT(QUOTIENT(MONTH([Date]) - 1, 3) + 1, "0"),
+				    "YearMonth", FORMAT([Date], "YYYY-MM")
+				)
+

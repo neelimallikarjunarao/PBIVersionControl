@@ -1,0 +1,77 @@
+table 'Measure Table'
+	lineageTag: 1df3acd4-9f2d-4790-bbfe-729c8efd0ac0
+
+	measure 'Total Sales' = SUM(financials[Sales])
+		formatString: $#,0.00
+		lineageTag: 01806345-42be-4de0-92cb-edf2bec7052b
+
+	measure 'Total Profit' = SUM(financials[Profit])
+		formatString: $#,0.00
+		lineageTag: 0da478b8-2a00-407e-b158-ef4fab0ab337
+
+	measure 'Total Gross Sales' = SUM(financials[Gross Sales])
+		formatString: $#,0.00
+		lineageTag: 41584ab9-2fb6-41db-9965-2da50dd4c717
+
+	measure 'Total Discounts' = SUM(financials[Discounts])
+		formatString: $#,0.00
+		lineageTag: 20a99185-95ff-4bd2-b1ee-5bbf88a8cebc
+
+	measure 'Sales Margin %' = DIVIDE([Total Profit],[Total Sales],0)
+		formatString: 0.00%
+		lineageTag: 68901f75-16a4-4bb6-916b-7b55fb7e01de
+
+	measure 'Sales YTD' = TOTALYTD([Total Sales], financials[Date])
+		formatString: $#,0.00
+		lineageTag: e4d73425-c9b7-4d65-9c5f-6045500e2213
+
+	measure 'Average Sale Price' = AVERAGE(financials[Sale Price])
+		formatString: $#,0.00
+		lineageTag: 1d1cdfe5-0ff7-4301-9446-1d16cb6b181d
+
+	/// Year-over-year sales growth percentage
+	measure 'Sales YoY %' =
+			VAR CurrentSales = [Total Sales]
+			VAR PreviousSales = CALCULATE([Total Sales], SAMEPERIODLASTYEAR('financials'[Date]))
+			RETURN DIVIDE(CurrentSales - PreviousSales, PreviousSales, 0)
+		formatString: 0.0%
+		lineageTag: 289504bc-5258-4856-84d9-96eefcf2361d
+
+	/// Year-to-date sales change versus prior year
+	measure 'Sales YTD vs Prior YTD %' =
+			VAR CurrentYTD = TOTALYTD([Total Sales], 'financials'[Date])
+			VAR PriorYTD = TOTALYTD([Total Sales], DATEADD('financials'[Date], -1, YEAR))
+			RETURN DIVIDE(CurrentYTD - PriorYTD, PriorYTD, 0)
+		formatString: 0.0%
+		lineageTag: 55df2794-ef37-4dc6-b8d5-fe2b54452876
+
+	/// Trailing 12-month sales
+	measure 'Sales Last 12 Months' = CALCULATE([Total Sales], DATESINPERIOD('financials'[Date], MAX('financials'[Date]), -12, MONTH))
+		formatString: #,##0
+		lineageTag: e4301f32-2011-4195-8b75-c7aed1646efe
+
+	/// Discounts as a percentage of gross sales
+	measure 'Discount Rate %' = DIVIDE([Total Discounts], [Total Gross Sales], 0)
+		formatString: 0.0%
+		lineageTag: f7dd87fc-aa5d-4079-b051-0888b562e98d
+
+	/// Share of sales for the current product context
+	measure 'Product Sales Share %' = DIVIDE([Total Sales], CALCULATE([Total Sales], ALL('financials'[Product])), 0)
+		formatString: 0.0%
+		lineageTag: 78954a43-0e67-4d94-ba06-e550d2b4faf8
+
+	/// Rank of each product by sales
+	measure 'Sales Rank by Product' = RANKX(ALL('financials'[Product]), [Total Sales],, DESC, DENSE)
+		formatString: 0
+		lineageTag: 0ee886d1-9dd8-4223-bda9-73c0ea5f56c0
+
+	column Dummy
+		isHidden
+		lineageTag: c7d877fe-e759-4069-8497-6bda08389f8f
+		isNameInferred
+		sourceColumn: [Dummy]
+
+	partition 'Measure Table' = calculated
+		mode: import
+		source = DATATABLE("Dummy", STRING, {{"dummy"}})
+
